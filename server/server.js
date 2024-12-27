@@ -20,6 +20,20 @@ const db = new sqlite3.Database("./server/gik339-projekt.db", (err) => {
   }
 });
 
-server.get('/books', (req, res) => {
-    res.json(books);
-})
+// Hantera GET-förfrågan för att hämta användare
+server.get("/books", (req, res) => {
+  // Hämta alla användare från databasen
+  db.all("SELECT * FROM books", (err, rows) => {
+    if (err) {
+      // Om ett fel inträffar skickar vi tillbaka ett 500-svar med felet
+      res.status(500).send(err);
+    } else {
+      // Om det går bra skickar vi tillbaka resultaten (rows) som JSON
+      res.send(rows);
+    }
+  });
+});
+
+server.listen(5000, () => {
+  console.log("Servern körs på http://localhost:5000");
+});
