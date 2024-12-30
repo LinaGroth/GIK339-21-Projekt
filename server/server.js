@@ -44,8 +44,8 @@ db.exec(sql, (err) => {
 });
 
   
-  server.get('/books', (req, res) => {
-    const query = "SELECT * FROM books";
+server.get('/books', (req, res) => {
+  const query = "SELECT * FROM books";
 
     db.all(query, [], (err, rows) => {
       if (err) {
@@ -55,58 +55,63 @@ db.exec(sql, (err) => {
         console.log("Data hämtad:", rows);
         res.json(rows);
       }
+  });
+
+});
+
+server.post('/books', (req, res) => {
+  const book = req.body;
+  const sql = `INSERT INTO books(author, title, isbn, genre, color) VALUES (?,?,?,?,?)`;
+
+  db.run(sql, Object.values(book), (err) =>{
+    if (err){
+      console.log(err);
+      res.status(500).send(err);
+    } else {
+      res.send("Ny bok tillagd");
+    }
+  });
+});
+
+server.put('/books', (req, res) => {
+  const bodyData = req.body;
+
+  const id = bodyData.id;
+  const book = {
+    author: bodyData.author,
+    title: bodyData.title,
+    isbn: bodyData.isbn,
+    genre: bodyData.genre
+  };
+
+  let updateString = '';
+  const columnArray = Object.keys(book);
+    columnArray.forEach((column, i) => {
+      updateString += `${column}="${book[column]}"`;
+      if (i !== columnArray.length - 1) updateString += ',';
     });
 
-    });
+  const sql = `UPDATE books SET ${updateString} WHERE id=${id}`;
+      
+  db.run(sql, Object.values(book), (err) =>{
+    if (err){
+      console.log(err);
+      res.status(500).send(err);
+    } else {
+      res.send("Boken uppdaterades");
+    }
+  });
+});
 
-    server.post('/books', (req, res) => {
-      const book = req.body;
-      const sql = `INSERT INTO books(author, title, isbn, genre) VALUES (?,?,?,?)`;
+server.delete('/books/:id', (req, res) => {
+  const id = req.params.id;
+  const sql = `DELETE FROM books WHERE id = ${id}`;
 
-      db.run(sql, Object.values(book), (err) =>{
-        if (err){
-          console.log(err);
-          res.status(500).send(err);
-        } else {
-          res.send("Ny bok tillagd");
-        }
-
-      });
-
-    });
-
-    server.put('/books', (req, res) => {
-      const bodyData = req.body;
-
-      const id = bodyData.id;
-      const book = {
-        author: bodyData.author,
-        title: bodyData.title,
-        isbn: bodyData.isbn,
-        genre: bodyData.genre
-      };
-
-      let updateString = '';
-      const columnArray = Object.keys(book);
-      columnArray.forEach((column, i) => {
-        updateString += `${column}="${book[column]}"`;
-        if (i !== columnArray.length - 1) updateString += ',';
-      });
-
-      const sql = `UPDATE books SET ${updateString} WHERE id=${id}`;
-      res.send(updateString);
-
-    });
-
-    server.delete('/books/:id', (req, res) => {
-        const id = req.params.id;
-        const sql = `DELETE FROM books WHERE id = ${id}`;
-
-        db.run(sql, (err) => {
-          if (err) {
-            console.log(err);
-            res.status(500).send(err);
-          } else {
-            res.send('Bok borttagen.');
-        }});
-    });
+  db.run(sql, (err) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
+    } else {
+      res.send('Bok borttagen.');
+  }});
+});
