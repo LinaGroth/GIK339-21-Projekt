@@ -1,0 +1,42 @@
+body {
+    background-color: rgb(255, 255, 255);
+}
+
+p {
+    color: #fff;
+    font-size: 20px;
+
+}
+
+
+.book-list-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+#book-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 lika kolumner */
+    gap: 20px;
+    list-style-type: none; /* Tar bort punktlistorna */
+    padding: 0; /* Tar bort standardpadding */
+}
+
+#book-list li {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 10px;
+    margin: 2px;
+}
+
+.btn-primary {
+    background-color: #343434;
+    border-color: #343434;
+}
+
+.btn-primary:hover {
+    background-color: #969696; 
+    border-color: #969696;
+}

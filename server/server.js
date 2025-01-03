@@ -115,3 +115,19 @@ server.delete('/books/:id', (req, res) => {
       res.send('Bok borttagen.');
   }});
 });
+
+server.get('/genre-color/:genre', (req, res) => {
+  const genre = req.params.genre;
+  const sql = "SELECT color FROM books WHERE genre = ? LIMIT 1";
+
+  db.get(sql, [genre], (err, row) => {
+    if (err) {
+      console.error("Fel vid hämtning av färg:", err.message);
+      res.status(500).send("Ett fel uppstod vid hämtning av färgen.");
+    } else if (row) {
+      res.json({ color: row.color });
+    } else {
+      res.status(404).send("Ingen bok med den genren hittades.");
+    }
+  });
+});
