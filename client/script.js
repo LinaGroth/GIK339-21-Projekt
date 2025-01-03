@@ -1,35 +1,83 @@
 const url = 'http://localhost:5000/books';
 
+// Hämta och visa befintliga böcker vid sidladdning
 fetch(url)
-  .then(data => data.json()) 
+  .then(data => data.json())
   .then(books => { 
-    const ul = document.getElementById("book-list"); // Hitta den existerande ul
-
-    ul.style.listStyleType = "none"; 
-
-    books.forEach(book => {  
-      const li = document.createElement("li");
-
-      li.innerHTML = `
-      <div> 
-       <p>Författare: ${book.author}</p>
-       <p>Title:  ${book.title}</p>
-       <p>ISBN: ${book.isbn}</p>
-       <p>Genre: ${book.genre}</p>
-      </div>`;
-
-      li.style.backgroundColor = book.color; 
-      ul.appendChild(li); 
-    });
-
-    document.getElementById("book-list-container").appendChild(ul); 
+    renderBooks(books);
   })
+  .catch(error => console.error("Fel vid hämtning av böcker:", error));
 
-  // Hämta referens till genreSelect och färgfältet
+// Rendera böcker i listan
+function renderBooks(books) {
+  const ul = document.getElementById("book-list");
+
+  ul.style.listStyleType = "none";
+
+  books.forEach(book => {  
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <div> 
+        <p>Författare: ${book.author}</p>
+        <p>Title: ${book.title}</p>
+        <p>ISBN: ${book.isbn}</p>
+        <p>Genre: ${book.genre}</p>
+      </div>`;
+    li.style.backgroundColor = book.color || "#f5f5f5"; // Default bakgrundsfärg om ingen finns
+    ul.appendChild(li); 
+  });
+}
+
+
+document.getElementById("book-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+   
+  const formData = new FormData(form);
+  const newBook = {
+    author: formData.get("author"),
+    title: formData.get("title"),
+    isbn: formData.get("isbn"),
+    genre: formData.get("genre"),
+};
+
+
+  // Skicka ny bok till servern
+  fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newBook),
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP-fel! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(book => {
+      addBookToList(book); // Lägg till boken i listan
+    })
+    .catch(error => console.error("Fel vid tillägg av bok:", error));
+});
+
+// Funktion för att lägga till en bok till listan
+function addBookToList(book) {
+  const ul = document.getElementById("book-list");
+  const li = document.createElement("li");
+  li.innerHTML = `
+    <div> 
+      <p>Författare: ${book.author}</p>
+      <p>Title: ${book.title}</p>
+      <p>ISBN: ${book.isbn}</p>
+      <p>Genre: ${book.genre}</p>
+    </div>`;
+  li.style.backgroundColor = book.color || "#f5f5f5"; // Default bakgrundsfärg om ingen finns
+  ul.appendChild(li);
+}
+
+// Hantera färg baserat på genre
 const genreSelect = document.getElementById('genreSelect');
-const colorInput = document.querySelector('input[placeholder="Ange färg"]'); // Välj rätt input-fält
-
-// Lyssna på förändringar i genreSelect
 genreSelect.addEventListener('change', function() {
   const selectedGenre = genreSelect.value;
 
@@ -38,7 +86,7 @@ genreSelect.addEventListener('change', function() {
       .then(response => response.json())
       .then(data => {
         if (data.color) {
-          colorInput.value = data.color; // Sätt färgen i färgfältet
+          genreSelect.style.backgroundColor = data.color; // Ställ in bakgrundsfärg
         }
       })
       .catch(error => console.error("Fel vid hämtning av färg:", error));

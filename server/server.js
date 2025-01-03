@@ -61,18 +61,18 @@ server.get('/books', (req, res) => {
 
 server.post('/books', (req, res) => {
   const book = req.body;
-  const sql = `INSERT INTO books(author, title, isbn, genre, color) VALUES (?,?,?,?,?)`;
+  console.log('Ny bok:', book); // Logga de inkommande data för felsökning
+  const sql = `INSERT INTO books(author, title, isbn, genre) VALUES (?, ?, ?, ?)`;
 
-  db.run(sql, Object.values(book), (err) =>{
-    if (err){
-      console.log(err);
-      res.status(500).send(err);
+  db.run(sql, [book.author, book.title, book.isbn, book.genre], function(err) {
+    if (err) {
+      console.error("Kunde inte lägga till bok:", err.message);
+      res.status(500).json({ error: "Kunde inte lägga till bok" }); // Skicka JSON vid fel
     } else {
-      res.send("Ny bok tillagd");
+      res.json({ id: this.lastID, ...book }); // Skicka tillbaka boken med ID som JSON
     }
   });
 });
-
 server.put('/books', (req, res) => {
   const bodyData = req.body;
 
@@ -114,4 +114,25 @@ server.delete('/books/:id', (req, res) => {
     } else {
       res.send('Bok borttagen.');
   }});
+});
+server.get('/genre-color/:genre', (req, res) => {
+  const genreColors = {
+    Romantik: '#AA4465',
+    Dystopi: '#7B747D',
+    Thriller: '#303633',
+    Fantasy: '#7EB09B',
+    Biografi: '#F0B67F',
+    Historia: '#9395D3',
+    Annat: '#969696',
+    
+  };
+
+  const genre = req.params.genre;
+  const color = genreColors[genre];
+
+  if (color) {
+    res.json({ color });
+  } else {
+    res.status(404).json({ message: 'Genre color not found' });
+  }
 });
