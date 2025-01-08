@@ -22,6 +22,7 @@ function renderBooks(books) {
         <p>Title: ${book.title}</p>
         <p>ISBN: ${book.isbn}</p>
         <p>Genre: ${book.genre}</p>
+        <button onclick="deleteBook(${book.id})">Ta bort</button>
       </div>`;
     li.style.backgroundColor = book.color || "#f5f5f5"; // Default bakgrundsfärg om ingen finns
     ul.appendChild(li); 
@@ -92,3 +93,8 @@ genreSelect.addEventListener('change', function() {
       .catch(error => console.error("Fel vid hämtning av färg:", error));
   }
 });
+
+function deleteBook(id) {
+  console.log("delete", id);
+  fetch(`${url}/${id}`, { method: "DELETE" }).then(result => fetchData());
+}
