@@ -1,87 +1,55 @@
 const url = 'http://localhost:5000/books';
 
 window.addEventListener('load', fetchData);
+const bookForm = document.querySelector("#bookForm");
 
 // Hämta och visa befintliga böcker vid sidladdning
 function fetchData() {
   fetch(url)
-    .then(data => data.json())
-    .then(books => { 
-      renderBooks(books);
-    })
-    .catch(error => console.error("Fel vid hämtning av böcker:", error));
+    .then((data) => data.json())
+    .then((books) => { 
+      if (books.length > 0) {
+        let html = `<ul class="list-group bookListContainer">`
 
-  // Rendera böcker i listan
-  function renderBooks(books) {
-    const ul = document.getElementById("book-list");
-
-    ul.style.listStyleType = "none";
-
-    books.forEach(book => {  
-      const li = document.createElement("li");
-      li.innerHTML = `
-        <div> 
-          <p>Författare: ${book.author}</p>
-          <p>Title: ${book.title}</p>
-          <p>ISBN: ${book.isbn}</p>
-          <p>Genre: ${book.genre}</p>
-          <button onclick="deleteBook(${book.id})">Ta bort</button>
-          <button onclick="changeBook(${book.id})">Ändra</button>
-        </div>`;
-      li.style.backgroundColor = book.color || "#f5f5f5"; // Default bakgrundsfärg om ingen finns
-      ul.appendChild(li); 
-    });
-  }
-}
-
-
-document.getElementById("book-form").addEventListener("submit", function(event) {
-    event.preventDefault();
-   
-  const formData = new FormData(form);
-  const newBook = {
-    author: formData.get("author"),
-    title: formData.get("title"),
-    isbn: formData.get("isbn"),
-    genre: formData.get("genre"),
-};
-
-  // Skicka ny bok till servern
-  fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(newBook),
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error(`HTTP-fel! status: ${response.status}`);
+        books.forEach(book => {  
+          html += `
+            <li class="mt-5 listItem" style="background-color: ${book.color};"> 
+              <p>Författare: ${book.author}</p>
+              <p>Title: ${book.title}</p>
+              <p>ISBN: ${book.isbn}</p>
+              <p>Genre: ${book.genre}</p>
+              <div id="buttons">
+                <button class="btnStyling" onclick="deleteBook(${book.id})">Ta bort</button>
+                <button class="btnStyling" onclick="changeBook(${book.id})">Ändra</button>
+              </div>
+            </li>`;
+          /* li.style.backgroundColor = book.color || "#f5f5f5"; */ // Default bakgrundsfärg om ingen finns
+          
+      });
+      html += `</ul>`
+      document.body.insertAdjacentHTML('beforeend', html);
     }
-    return response.json();
-  })
-  .then(book => {
-    addBookToList(book); // Lägg till boken i listan
-  })
-  .catch(error => console.error("Fel vid tillägg av bok:", error));
-});
-
-// Funktion för att lägga till en bok till listan
-function addBookToList(book) {
-  const ul = document.getElementById("book-list");
-  const li = document.createElement("li");
-  li.innerHTML = `
-    <div> 
-      <p>Författare: ${book.author}</p>
-      <p>Title: ${book.title}</p>
-      <p>ISBN: ${book.isbn}</p>
-      <p>Genre: ${book.genre}</p>
-    </div>`;
-  li.style.backgroundColor = book.color || "#f5f5f5"; // Default bakgrundsfärg om ingen finns
-  ul.appendChild(li);
+})
+      .catch(error => console.error("Fel vid hämtning av böcker:", error));
 }
 
-// Hantera färg baserat på genre
+function changeBook(id) {
+  
+  console.log("change", id);
+  fetch(`${url}/${id}`)
+  .then((result) => result.json())
+  .then((book) => {
+    console.log(book);
+    bookForm.author.value = book.author;
+    bookForm.title.value = book.title;
+    bookForm.isbn.value = book.isbn;
+    bookForm.genre.value = book.genre;
+
+    localStorage.setItem('currentId', book.id)
+  });
+  
+}
+
 const genreSelect = document.getElementById('genreSelect');
 genreSelect.addEventListener('change', function() {
   const selectedGenre = genreSelect.value;
@@ -103,16 +71,40 @@ function deleteBook(id) {
   fetch(`${url}/${id}`, { method: "DELETE" }).then(result => fetchData());
 }
 
-function changeBook(id) {
-  console.log("change", id);
-  fetch(`${url}/${id}`)
-  .then((result) => result.json())
-  .then((book) => {
-    console.log(book);
-  
 
-  })
+
+
+
+bookForm.addEventListener('submit', handleSubmit);
+
+function handleSubmit(e) {
+  e.preventDefault();
+  const bookObject = {
+    author: '',
+    title: '',
+    isbn: '',
+    genre: ''
+  };
+  bookObject.author = bookForm.author.value;
+  bookObject.title = bookForm.title.value;
+  bookObject.isbn = bookForm.isbn.value;
+  bookObject.genre = bookForm.genre.value;
+
+  const request = new Request(url, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify(bookObject)
+  });
+  fetch(request).then((response) =>{
+    console.log(response);
+    fetchData();
+    bookForm.reset();
+  });
 }
+
+
 /* const addBook = document.getElementById(addBook);
 function addBookToLibrary() {
   

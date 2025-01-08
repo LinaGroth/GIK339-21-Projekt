@@ -5,6 +5,8 @@ const path = require('path');
 
 const server = express();
 
+
+
 server
   .use(express.json())
   .use(express.urlencoded({ extended: false }))
@@ -73,6 +75,7 @@ server.post('/books', (req, res) => {
     }
   });
 });
+
 server.put('/books', (req, res) => {
   const bodyData = req.body;
 
@@ -82,7 +85,7 @@ server.put('/books', (req, res) => {
     title: bodyData.title,
     isbn: bodyData.isbn,
     genre: bodyData.genre
-  };
+  }; 
 
   let updateString = '';
   const columnArray = Object.keys(book);
@@ -115,6 +118,7 @@ server.delete('/books/:id', (req, res) => {
       res.send('Bok borttagen.');
   }});
 });
+
 server.get('/genre-color/:genre', (req, res) => {
   const genreColors = {
     Romantik: '#AA4465',
@@ -135,4 +139,17 @@ server.get('/genre-color/:genre', (req, res) => {
   } else {
     res.status(404).json({ message: 'Genre color not found' });
   }
+});
+
+
+server.get('/books/:id', (req, res) => {
+  const id = req.params.id;
+  const sql = `SELECT * FROM books WHERE id = ${id}`;
+
+  db.all(sql, (err, rows) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.send(rows[0]);
+  }});
 });

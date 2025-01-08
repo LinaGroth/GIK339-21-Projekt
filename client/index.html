@@ -10,25 +10,25 @@
   <body>
         <div class="container mt-5">
             <h1>Projekt - Grupp 21</h1>
-            <form id="book-form">
+            <form id="bookForm">
                 <fieldset>
                     <legend>Böcker</legend>
                     <div class="mb-3">
                         <label for="authorInput" class="form-label">Författare</label>
-                        <input type="text" id="authorInput" class="form-control" placeholder="Ange författare" required>
+                        <input type="text" id="authorInput" name="author" class="form-control" placeholder="Ange författare" required>
                     </div>
                     <div class="mb-3">
                         <label for="titleInput" class="form-label">Titel</label>
-                        <input type="text" id="titleInput" class="form-control" placeholder="Ange titel" required>
+                        <input type="text" id="titleInput" name="title" class="form-control" placeholder="Ange titel" required>
                     </div>
 
                     <div class="mb-3">
                         <label for="ISBNInput" class="form-label">ISBN-nummer</label>
-                        <input type="text" id="ISBNInput" class="form-control" placeholder="Ange ISBN-nummer" required>
+                        <input type="text" id="ISBNInput" name="isbn" class="form-control" placeholder="Ange ISBN-nummer" required>
                     </div>
                     <div class="mb-3">
                         <label for="genreSelect" class="form-label">Genre</label>
-                        <select id="genreSelect" class="form-select" required>
+                        <select id="genreSelect" name="genre" class="form-select" required>
                             <option value="" disabled selected>Välj genre</option>
                             <option value="Romantik">Romantik</option>
                             <option value="Dystopi">Dystopi</option>
@@ -45,10 +45,7 @@
                 </fieldset>
             </form>
     
-            <div id="book-list-container" class="mt-5">
-                <h2>Lista över böcker</h2>
-                <ul id="book-list" class="list-group"></ul>
-            </div>
+            
         </div>
 
 

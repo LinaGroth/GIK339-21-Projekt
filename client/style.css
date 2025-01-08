@@ -9,20 +9,19 @@ p {
 }
 
 
-.book-list-container {
+.bookListContainer {
+    list-style: none;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
 }
-#book-list {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 lika kolumner */
+#bookList {
+    display: grid; /* 3 lika kolumner */
     gap: 20px;
-    list-style-type: none; /* Tar bort punktlistorna */
     padding: 0; /* Tar bort standardpadding */
 }
 
-#book-list li {
+.listItem {
     padding: 15px;
     display: flex;
     flex-direction: column;
