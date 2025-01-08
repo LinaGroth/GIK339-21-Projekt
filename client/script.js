@@ -1,32 +1,37 @@
 const url = 'http://localhost:5000/books';
 
+window.addEventListener('load', fetchData);
+
 // Hämta och visa befintliga böcker vid sidladdning
-fetch(url)
-  .then(data => data.json())
-  .then(books => { 
-    renderBooks(books);
-  })
-  .catch(error => console.error("Fel vid hämtning av böcker:", error));
+function fetchData() {
+  fetch(url)
+    .then(data => data.json())
+    .then(books => { 
+      renderBooks(books);
+    })
+    .catch(error => console.error("Fel vid hämtning av böcker:", error));
 
-// Rendera böcker i listan
-function renderBooks(books) {
-  const ul = document.getElementById("book-list");
+  // Rendera böcker i listan
+  function renderBooks(books) {
+    const ul = document.getElementById("book-list");
 
-  ul.style.listStyleType = "none";
+    ul.style.listStyleType = "none";
 
-  books.forEach(book => {  
-    const li = document.createElement("li");
-    li.innerHTML = `
-      <div> 
-        <p>Författare: ${book.author}</p>
-        <p>Title: ${book.title}</p>
-        <p>ISBN: ${book.isbn}</p>
-        <p>Genre: ${book.genre}</p>
-        <button onclick="deleteBook(${book.id})">Ta bort</button>
-      </div>`;
-    li.style.backgroundColor = book.color || "#f5f5f5"; // Default bakgrundsfärg om ingen finns
-    ul.appendChild(li); 
-  });
+    books.forEach(book => {  
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <div> 
+          <p>Författare: ${book.author}</p>
+          <p>Title: ${book.title}</p>
+          <p>ISBN: ${book.isbn}</p>
+          <p>Genre: ${book.genre}</p>
+          <button onclick="deleteBook(${book.id})">Ta bort</button>
+          <button onclick="changeBook(${book.id})">Ändra</button>
+        </div>`;
+      li.style.backgroundColor = book.color || "#f5f5f5"; // Default bakgrundsfärg om ingen finns
+      ul.appendChild(li); 
+    });
+  }
 }
 
 
@@ -41,7 +46,6 @@ document.getElementById("book-form").addEventListener("submit", function(event) 
     genre: formData.get("genre"),
 };
 
-
   // Skicka ny bok till servern
   fetch(url, {
     method: "POST",
@@ -50,16 +54,16 @@ document.getElementById("book-form").addEventListener("submit", function(event) 
     },
     body: JSON.stringify(newBook),
   })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP-fel! status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then(book => {
-      addBookToList(book); // Lägg till boken i listan
-    })
-    .catch(error => console.error("Fel vid tillägg av bok:", error));
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP-fel! status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(book => {
+    addBookToList(book); // Lägg till boken i listan
+  })
+  .catch(error => console.error("Fel vid tillägg av bok:", error));
 });
 
 // Funktion för att lägga till en bok till listan
@@ -98,3 +102,18 @@ function deleteBook(id) {
   console.log("delete", id);
   fetch(`${url}/${id}`, { method: "DELETE" }).then(result => fetchData());
 }
+
+function changeBook(id) {
+  console.log("change", id);
+  fetch(`${url}/${id}`)
+  .then((result) => result.json())
+  .then((book) => {
+    console.log(book);
+  
+
+  })
+}
+/* const addBook = document.getElementById(addBook);
+function addBookToLibrary() {
+  
+} */

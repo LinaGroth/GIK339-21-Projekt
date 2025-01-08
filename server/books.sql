@@ -6,7 +6,7 @@ CREATE TABLE books (
    id        INTEGER PRIMARY KEY AUTOINCREMENT,
    author    VARCHAR(50) NOT NULL, 
    title     VARCHAR(50) NOT NULL, 
-   isbn      VARCHAR(16) NOT NULL, 
+   isbn      INTEGER(16) NOT NULL, 
    genre     VARCHAR(30) NOT NULL,
    color     VARCHAR(7) --För grafiskt utseende
 );
