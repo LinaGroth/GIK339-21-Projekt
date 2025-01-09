@@ -12,8 +12,9 @@ function fetchData() {
         let html = `<ul class="list-group bookListContainer">`
 
         books.forEach(book => {  
+          const backgroundColor = book.color || "#f55555";
           html += `
-            <li class="mt-5 listItem" style="background-color: ${book.color};"> 
+            <li class="mt-5 listItem" style="background-color: ${backgroundColor};"> 
               <p>Författare: ${book.author}</p>
               <p>Title: ${book.title}</p>
               <p>ISBN: ${book.isbn}</p>
@@ -23,7 +24,6 @@ function fetchData() {
                 <button class="btnStyling" onclick="changeBook(${book.id})">Ändra</button>
               </div>
             </li>`;
-          /* li.style.backgroundColor = book.color || "#f5f5f5"; */ // Default bakgrundsfärg om ingen finns
           
       });
       html += `</ul>`
@@ -59,7 +59,8 @@ genreSelect.addEventListener('change', function() {
       .then(response => response.json())
       .then(data => {
         if (data.color) {
-          genreSelect.style.backgroundColor = data.color; // Ställ in bakgrundsfärg
+          genreSelect.style.backgroundColor = data.color;
+          document.getElementById('color').value = data.color;  // Ställ in bakgrundsfärg
         }
       })
       .catch(error => console.error("Fel vid hämtning av färg:", error));
@@ -71,16 +72,13 @@ function deleteBook(id) {
   fetch(`${url}/${id}`, { method: "DELETE" }).then(result => fetchData());
 }
 
-
-
-
-
 bookForm.addEventListener('submit', handleSubmit);
 
 function handleSubmit(e) {
   e.preventDefault();
+  
   const bookObject = {
-    author: '',
+    author: '', 
     title: '',
     isbn: '',
     genre: ''
@@ -90,18 +88,26 @@ function handleSubmit(e) {
   bookObject.isbn = bookForm.isbn.value;
   bookObject.genre = bookForm.genre.value;
 
+
+/*   const id = localStorage.getItem('currentId');
+  if(id) {
+    bookObject.id = id;
+  }  */
+
   const request = new Request(url, {
-    method: 'POST',
+    method: /* bookObject.id ? 'PUT': */ 'POST',
     headers: {
       'content-type': 'application/json'
     },
     body: JSON.stringify(bookObject)
   });
-  fetch(request).then((response) =>{
+  fetch(request).then((response) => {
     console.log(response);
     fetchData();
+    /* localStorage.removeItem('currentId'); */
     bookForm.reset();
   });
+
 }
 
 

@@ -64,9 +64,22 @@ server.get('/books', (req, res) => {
 server.post('/books', (req, res) => {
   const book = req.body;
   console.log('Ny bok:', book); // Logga de inkommande data för felsökning
-  const sql = `INSERT INTO books(author, title, isbn, genre) VALUES (?, ?, ?, ?)`;
 
-  db.run(sql, [book.author, book.title, book.isbn, book.genre], function(err) {
+  const genreColors = {
+    Romantik: '#AA4465',
+    Dystopi: '#7B747D',
+    Thriller: '#303633',
+    Fantasy: '#7EB09B',
+    Biografi: '#F0B67F',
+    Historia: '#9395D3',
+    Annat: '#969696',//
+    
+  };
+
+  const color = genreColors[book.genre] || '#FFFFFF'; // Standardfärg om genre saknas//
+  const sql = `INSERT INTO books(author, title, isbn, genre, color) VALUES (?, ?, ?, ?, ?)`;
+
+  db.run(sql, [book.author, book.title, book.isbn, book.genre, color], function(err) {
     if (err) {
       console.error("Kunde inte lägga till bok:", err.message);
       res.status(500).json({ error: "Kunde inte lägga till bok" }); // Skicka JSON vid fel
