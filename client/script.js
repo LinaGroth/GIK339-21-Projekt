@@ -24,12 +24,11 @@ function fetchData() {
                 <button class="btnStyling" onclick="changeBook(${book.id})">Ändra</button>
               </div>
             </li>`;
-          
-      });
+        });
       html += `</ul>`
       document.body.insertAdjacentHTML('beforeend', html);
     }
-})
+  })
       .catch(error => console.error("Fel vid hämtning av böcker:", error));
 }
 
@@ -50,22 +49,22 @@ function changeBook(id) {
   
 }
 
-const genreSelect = document.getElementById('genreSelect');
+/* const genreSelect = document.getElementById('genreSelect');
 genreSelect.addEventListener('change', function() {
   const selectedGenre = genreSelect.value;
 
-  if (selectedGenre) {
+  if (selectedGenre) { 
     fetch(`http://localhost:5000/genre-color/${selectedGenre}`)
       .then(response => response.json())
       .then(data => {
         if (data.color) {
           genreSelect.style.backgroundColor = data.color;
-          document.getElementById('color').value = data.color;  // Ställ in bakgrundsfärg
+          document.getElementById('color').value = data.color;  
         }
       })
       .catch(error => console.error("Fel vid hämtning av färg:", error));
   }
-});
+}); */
 
 function deleteBook(id) {
   console.log("delete", id);

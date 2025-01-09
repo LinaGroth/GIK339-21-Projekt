@@ -23,7 +23,6 @@ server
   });
   
 
-// Skapa databasinstans
   const db = new sqlite3.Database("./gik339-projekt.db", (err) => {
     if (err) {
       console.error("Kunde inte ansluta till databasen:", err.message);
@@ -32,11 +31,9 @@ server
     }
   });
 
-  // Läs SQL-filen och kör kommandona
 const sqlFile = path.join(__dirname, 'books.sql'); // Hitta rätt väg till books.sql
 const sql = fs.readFileSync(sqlFile, 'utf8'); // Läs innehållet från SQL-filen
 
-// Kör SQL-kommandona för att skapa och fylla databasen
 db.exec(sql, (err) => {
   if (err) {
     console.error("Kunde inte köra SQL-kommandon:", err.message);
@@ -63,7 +60,7 @@ server.get('/books', (req, res) => {
 
 server.post('/books', (req, res) => {
   const book = req.body;
-  console.log('Ny bok:', book); // Logga de inkommande data för felsökning
+  console.log('Ny bok:', book); 
 
   const genreColors = {
     Romantik: '#AA4465',
@@ -76,15 +73,15 @@ server.post('/books', (req, res) => {
     
   };
 
-  const color = genreColors[book.genre] || '#FFFFFF'; // Standardfärg om genre saknas//
+  const color = genreColors[book.genre] || '#FFFFFF'; 
   const sql = `INSERT INTO books(author, title, isbn, genre, color) VALUES (?, ?, ?, ?, ?)`;
 
   db.run(sql, [book.author, book.title, book.isbn, book.genre, color], function(err) {
     if (err) {
       console.error("Kunde inte lägga till bok:", err.message);
-      res.status(500).json({ error: "Kunde inte lägga till bok" }); // Skicka JSON vid fel
+      res.status(500).json({ error: "Kunde inte lägga till bok" }); 
     } else {
-      res.json({ id: this.lastID, ...book }); // Skicka tillbaka boken med ID som JSON
+      res.json({ id: this.lastID, ...book }); 
     }
   });
 });

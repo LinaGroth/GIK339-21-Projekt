@@ -1,17 +1,16 @@
--- Ta bort tabellen om den redan finns
 DROP TABLE IF EXISTS books;
 
--- Skapa tabellen books
+
 CREATE TABLE books (
    id        INTEGER PRIMARY KEY AUTOINCREMENT,
    author    VARCHAR(50) NOT NULL, 
    title     VARCHAR(50) NOT NULL, 
    isbn      INTEGER(16) NOT NULL, 
    genre     VARCHAR(30) NOT NULL,
-   color     VARCHAR(7) --För grafiskt utseende
+   color     VARCHAR(7) 
 );
 
--- Lägg till data i tabellen, id behövs inte läggas till manuellt (pga autoincrement)
+
 INSERT INTO books (author, title, isbn, genre, color) VALUES 
 ('Diana Gabaldon', 'Främlingen', '9789175470917', 'Romantik', '#AA4465'),
 ('Suzanne Collins', 'Hungerspelen', '9780439023528', 'Dystopi', '#7B747D'),
