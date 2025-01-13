@@ -1,6 +1,5 @@
 const url = 'http://localhost:5000/books';
-/* let books = [];
- */
+
 window.addEventListener('load', fetchData);
 const bookForm = document.querySelector("#bookForm");
 

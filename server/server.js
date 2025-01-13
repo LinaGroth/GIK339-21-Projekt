@@ -110,7 +110,7 @@ server.put('/books', (req, res) => {
 
   const sql = `UPDATE books SET ${updateString} WHERE id=${id}`;
       
-  db.run(sql, /* Object.values(book), */ (err) =>{
+  db.run(sql, (err) =>{
     if (err){
       console.log(err);
       res.status(500).send(err);
