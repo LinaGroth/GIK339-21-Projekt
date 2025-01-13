@@ -95,3 +95,8 @@ function handleSubmit(e) {
 
 const feedbackModal = document.getElementById('feedbackModal');
 const inputModal = document.getElementById('inputModal'); 
+
+function showFeedback(message) {
+  inputModal.textContent = message; // Sätt meddelandet i modalens body
+  feedbackModal.show(); // Visa modalen
+}
