@@ -9,7 +9,6 @@ function fetchData() {
   fetch(url)
     .then((data) => data.json())
     .then((books) => { 
-/*       book = data;  */
       if (books.length > 0) {
         let html = `<ul class="list-group bookListContainer">`
 
@@ -46,28 +45,12 @@ function changeBook(id) {
     bookForm.title.value = book.title;
     bookForm.isbn.value = book.isbn;
     bookForm.genre.value = book.genre;
-
+    
+    
     localStorage.setItem('currentId', book.id);
   });
   
 }
-
-/* const genreSelect = document.getElementById('genreSelect');
-genreSelect.addEventListener('change', function() {
-  const selectedGenre = genreSelect.value;
-
-  if (selectedGenre) { 
-    fetch(`http://localhost:5000/genre-color/${selectedGenre}`)
-      .then(response => response.json())
-      .then(data => {
-        if (data.color) {
-          genreSelect.style.backgroundColor = data.color;
-          document.getElementById('color').value = data.color;  
-        }
-      })
-      .catch(error => console.error("Fel vid hämtning av färg:", error));
-  }
-}); */
 
 function deleteBook(id) {
   console.log("delete", id);
@@ -90,17 +73,6 @@ function handleSubmit(e) {
   bookObject.isbn = bookForm.isbn.value;
   bookObject.genre = bookForm.genre.value;
 
-/*   const existingBookIndex = books.findIndex(book => book.id === bookObject.id);
-  
-  if (existingBookIndex !== -1) {
-    books[exsistingBookIndex] = bookObject;
-    console.log('Bok med ISBN ${bookObject.id} uppdaterades');
-  } else {
-    books.push(bookObject);
-    console.log('Ny bok med ISBN ${bookObject.id} skapades');
-
-  } */
-
   const id = localStorage.getItem('currentId');
   if(id) {
     bookObject.id = id;
@@ -121,9 +93,3 @@ function handleSubmit(e) {
   });
 
 }
-
-
-/* const addBook = document.getElementById(addBook);
-function addBookToLibrary() {
-  
-} */

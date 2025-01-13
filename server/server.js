@@ -3,9 +3,20 @@ const sqlite3 = require("sqlite3").verbose();
 const fs = require('fs');
 const path = require('path');
 
+function getGenreColor(genre) {
+  const genreColors = {
+    Romantik: '#AA4465',
+    Dystopi: '#7B747D',
+    Thriller: '#303633',
+    Fantasy: '#7EB09B',
+    Biografi: '#F0B67F',
+    Historia: '#9395D3',
+    Annat: '#969696',
+  };
+  return genreColors[genre] || '#FFFFFF';
+}
+
 const server = express();
-
-
 
 server
   .use(express.json())
@@ -62,18 +73,9 @@ server.post('/books', (req, res) => {
   const book = req.body;
   console.log('Ny bok:', book); 
 
-  const genreColors = {
-    Romantik: '#AA4465',
-    Dystopi: '#7B747D',
-    Thriller: '#303633',
-    Fantasy: '#7EB09B',
-    Biografi: '#F0B67F',
-    Historia: '#9395D3',
-    Annat: '#969696',//
-    
-  };
 
-  const color = genreColors[book.genre] || '#FFFFFF'; 
+
+  const color = getGenreColor(book.genre); 
   const sql = `INSERT INTO books(author, title, isbn, genre, color) VALUES (?, ?, ?, ?, ?)`;
 
   db.run(sql, [book.author, book.title, book.isbn, book.genre, color], function(err) {
@@ -88,7 +90,7 @@ server.post('/books', (req, res) => {
 
 server.put('/books', (req, res) => {
   const bodyData = req.body;
-
+  
   const id = bodyData.id;
   const book = {
     author: bodyData.author,
@@ -96,6 +98,8 @@ server.put('/books', (req, res) => {
     isbn: bodyData.isbn,
     genre: bodyData.genre
   }; 
+  const color = getGenreColor(book.genre); 
+  book.color = color;
 
   let updateString = '';
   const columnArray = Object.keys(book);
