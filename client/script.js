@@ -92,3 +92,6 @@ function handleSubmit(e) {
   });
 
 }
+
+const feedbackModal = document.getElementById('feedbackModal');
+const inputModal = document.getElementById('inputModal'); 
