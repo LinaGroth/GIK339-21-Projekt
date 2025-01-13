@@ -1,5 +1,6 @@
 const url = 'http://localhost:5000/books';
-
+/* let books = [];
+ */
 window.addEventListener('load', fetchData);
 const bookForm = document.querySelector("#bookForm");
 
@@ -8,6 +9,7 @@ function fetchData() {
   fetch(url)
     .then((data) => data.json())
     .then((books) => { 
+/*       book = data;  */
       if (books.length > 0) {
         let html = `<ul class="list-group bookListContainer">`
 
@@ -26,7 +28,8 @@ function fetchData() {
             </li>`;
         });
       html += `</ul>`
-      document.body.insertAdjacentHTML('beforeend', html);
+      const booksContainer = document.getElementById('booksContainer');
+      booksContainer.innerHTML = html;
     }
   })
       .catch(error => console.error("Fel vid hämtning av böcker:", error));
@@ -44,7 +47,7 @@ function changeBook(id) {
     bookForm.isbn.value = book.isbn;
     bookForm.genre.value = book.genre;
 
-    localStorage.setItem('currentId', book.id)
+    localStorage.setItem('currentId', book.id);
   });
   
 }
@@ -87,14 +90,24 @@ function handleSubmit(e) {
   bookObject.isbn = bookForm.isbn.value;
   bookObject.genre = bookForm.genre.value;
 
+/*   const existingBookIndex = books.findIndex(book => book.id === bookObject.id);
+  
+  if (existingBookIndex !== -1) {
+    books[exsistingBookIndex] = bookObject;
+    console.log('Bok med ISBN ${bookObject.id} uppdaterades');
+  } else {
+    books.push(bookObject);
+    console.log('Ny bok med ISBN ${bookObject.id} skapades');
 
-/*   const id = localStorage.getItem('currentId');
+  } */
+
+  const id = localStorage.getItem('currentId');
   if(id) {
     bookObject.id = id;
-  }  */
+  } 
 
-  const request = new Request(url, {
-    method: /* bookObject.id ? 'PUT': */ 'POST',
+  const request = new Request(url,  {
+    method: bookObject.id ? 'PUT': 'POST',
     headers: {
       'content-type': 'application/json'
     },
@@ -103,7 +116,7 @@ function handleSubmit(e) {
   fetch(request).then((response) => {
     console.log(response);
     fetchData();
-    /* localStorage.removeItem('currentId'); */
+    localStorage.removeItem('currentId');
     bookForm.reset();
   });
 
