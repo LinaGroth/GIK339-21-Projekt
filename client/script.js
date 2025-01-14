@@ -14,7 +14,7 @@ function fetchData() {
         books.forEach(book => {  
           const backgroundColor = book.color || "#f55555";
           html += `
-            <li class="mt-5 listItem" style="background-color: ${backgroundColor};"> 
+            <li class="mt-5 listItem " style="background-color: ${backgroundColor};"> 
               <p>Författare: ${book.author}</p>
               <p>Title: ${book.title}</p>
               <p>ISBN: ${book.isbn}</p>
@@ -48,41 +48,24 @@ function changeBook(id) {
     
     localStorage.setItem('currentId', book.id);
   });
-  
 }
 
 
 function deleteBook(id) {
   console.log("delete", id);
-  fetch(`${url}/${id}`, { method: "DELETE" }).then(result => fetchData());
-  const feedbackModal = document.getElementById('feedbackModal');
-  const modalBody = feedbackModal.querySelector('.modal-body');
-  feedbackModal.addEventListener('show.bs.modal', (event) => {
-    // Identifiera knappen som öppnade modalen
-    const button = event.relatedTarget;
-
-    console.log("Button:", button); // Logga knappen
-    console.log("Data-message:", button ? button.getAttribute('data-message') : "Ingen knapp hittades");
-
-    // Hämta data-message om knappen finns, annars sätt ett standardmeddelande
-    const message = button ? button.getAttribute('data-message') : 'Inget meddelande att visa';
-
-    // Uppdatera modalens innehåll
-    modalBody.innerHTML = `<p>${message}</p>`;
-  });
+  fetch(`${url}/${id}`, { method: "DELETE" })
+  .then((response) => {
+    if (response.ok) {
+      showFeedback('Boken har tagits bort!');
+      fetchData(); // Uppdatera boklistan
+    } else {
+      throw new Error('Kunde inte ta bort boken.');
+    }
+  })
+  .catch((error) => console.error('Fel vid borttagning:', error));
 }
-/*   function deleteBook(id) {
-    fetch(`${url}/${id}`, { method: 'DELETE' })
-      .then((response) => {
-        if (response.ok) {
-          showFeedback('Boken har tagits bort!');
-          fetchData();
-        } else {
-          throw new Error('Kunde inte ta bort boken.');
-        }
-      })
-      .catch((error) => console.error('Fel vid borttagning:', error));
-  } */
+
+
 
 bookForm.addEventListener('submit', handleSubmit);
 
@@ -112,67 +95,34 @@ function handleSubmit(e) {
     },
     body: JSON.stringify(bookObject)
   });
-  fetch(request).then((response) => {
-    console.log(response);
-    
-    if (bookObject.id) {
-      modalBody.innerHTML = `<p>Boken "${bookObject.title}" har uppdaterats.</p>`;
-    } else {
-      modalBody.innerHTML = `<p>Boken "${bookObject.title}" har lagts till.</p>`;
-    }
+  fetch(request)
+    .then((response) => {
+      if (response.ok) {
+        const action = bookObject.id ? 'uppdaterats' : 'lagts till';
+        showFeedback(`Boken "${bookObject.title}" har ${action}.`);
+        fetchData();
+        bookForm.reset();
+        localStorage.removeItem('currentId');
+      } else {
+        throw new Error('Kunde inte spara boken.');
+      }
+    })
 
-    // Visa modalen
-    const feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
-    feedbackModal.show();
-    
-    fetchData();
-    localStorage.removeItem('currentId');
-    bookForm.reset();
-  })
-  
   .catch((error) => console.error('Fel vid skapande/uppdatering:', error));
 }
-/*   fetch(request)
-  .then((response) => response.json())
-  .then((data) => {
-    const action = id ? 'uppdaterad' : 'skapad';
-    showFeedback(`Boken "${data.title}" har ${action}!`);
-    fetchData();
-    localStorage.removeItem('currentId');
-    bookForm.reset();
-  })
-} */
 
-
-/* const inputModal = document.getElementById('inputModal');  */
-
-/* function showFeedback(message) {
-  inputModal.textContent = message; // Sätt meddelandet i modalens body
-  feedbackModal.show(); // Visa modalen
-  }
-  */
- 
-/*  function showFeedback(message) {
-   const modalMessage = document.querySelector('#modal-body');
-   modalMessage.textContent = message; // Sätt meddelandet i modalens body
-   const feedbackModal = new bootstrap.Modal(document.querySelector('#modal'));
-   feedbackModal.show(); // Visa modalen
-  } */
-  
-/* const feedbackModal = document.getElementById('feedbackModal');
-const modalBody = feedbackModal.querySelector('.modal-body');
-feedbackModal.addEventListener('show.bs.modal', (event) => {
-  // Identifiera knappen som öppnade modalen
-  const button = event.relatedTarget;
-
-  // Hämta data-message från knappen
-  const message = button.getAttribute('data-message');
-
-  // Uppdatera modalens innehåll
+function showFeedback(message) {
+  const feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+  const modalBody = document.getElementById('inputModal');
   modalBody.innerHTML = `<p>${message}</p>`;
+  feedbackModal.show();
+}
+
+
+const feedbackModal = document.getElementById('feedbackModal');
+
+// Eventlistener för att stänga modalen och rensa modal-backdrop
+feedbackModal.addEventListener('hidden.bs.modal', () => {
+  const backdrops = document.querySelectorAll('.modal-backdrop');
+  backdrops.forEach(backdrop => backdrop.remove());
 });
-
- */
-
-
-

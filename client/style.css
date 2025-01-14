@@ -1,5 +1,5 @@
 body {
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(237, 229, 229);
 }
 
 #booksContainer p {
@@ -14,6 +14,7 @@ body {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
+    margin: 100px;
 }
 #bookList {
     display: grid; /* 3 lika kolumner */
@@ -40,3 +41,27 @@ body {
     border-color: #969696;
 }
 
+#buttons .btnStyling {
+    background-color: #343434; 
+    color: #fff;
+    border: 0.1px solid #343434; 
+    border-color: #fff; 
+    padding: 7px;
+    border-radius: 5px; 
+    font-size: 14px; 
+
+}
+
+
+#buttons .btnStyling:hover {
+    background-color: #969696;
+    border-color: #fff; 
+}
+
+/* För att säkerställa att knappar ser bra ut på mindre skärmar */
+#buttons {
+    display: flex;
+    gap: 10px; 
+    margin-top: 10px; 
+    flex-wrap: wrap; 
+}
