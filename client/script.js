@@ -20,7 +20,7 @@ function fetchData() {
               <p>ISBN: ${book.isbn}</p>
               <p>Genre: ${book.genre}</p>
               <div id="buttons">
-                <button class="btnStyling" onclick="deleteBook(${book.id})">Ta bort</button>
+                <button class="btnStyling" onclick="deleteBook(${book.id})" data-bs-toggle="modal" data-bs-target="#feedbackModal" data-message="Bok borttagen!">Ta bort</button>
                 <button class="btnStyling" onclick="changeBook(${book.id})">Ändra</button>
               </div>
             </li>`;
@@ -55,6 +55,18 @@ function deleteBook(id) {
   console.log("delete", id);
   fetch(`${url}/${id}`, { method: "DELETE" }).then(result => fetchData());
 }
+/*   function deleteBook(id) {
+    fetch(`${url}/${id}`, { method: 'DELETE' })
+      .then((response) => {
+        if (response.ok) {
+          showFeedback('Boken har tagits bort!');
+          fetchData();
+        } else {
+          throw new Error('Kunde inte ta bort boken.');
+        }
+      })
+      .catch((error) => console.error('Fel vid borttagning:', error));
+  } */
 
 bookForm.addEventListener('submit', handleSubmit);
 
@@ -86,17 +98,59 @@ function handleSubmit(e) {
   });
   fetch(request).then((response) => {
     console.log(response);
+    const modalBody = document.getElementById('inputModal');
+    if (bookObject.id) {
+      modalBody.innerHTML = `<p>Boken "${bookObject.title}" har uppdaterats.</p>`;
+    } else {
+      modalBody.innerHTML = `<p>Boken "${bookObject.title}" har lagts till.</p>`;
+    }
+
+    // Visa modalen
+    const feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+    feedbackModal.show();
     fetchData();
     localStorage.removeItem('currentId');
     bookForm.reset();
-  });
-
+  })
+  
+  .catch((error) => console.error('Fel vid skapande/uppdatering:', error));
 }
+/*   fetch(request)
+  .then((response) => response.json())
+  .then((data) => {
+    const action = id ? 'uppdaterad' : 'skapad';
+    showFeedback(`Boken "${data.title}" har ${action}!`);
+    fetchData();
+    localStorage.removeItem('currentId');
+    bookForm.reset();
+  })
+} */
 
-const feedbackModal = document.getElementById('feedbackModal');
-const inputModal = document.getElementById('inputModal'); 
 
-function showFeedback(message) {
+/* const inputModal = document.getElementById('inputModal');  */
+
+/* function showFeedback(message) {
   inputModal.textContent = message; // Sätt meddelandet i modalens body
   feedbackModal.show(); // Visa modalen
-}
+  }
+  */
+ 
+/*  function showFeedback(message) {
+   const modalMessage = document.querySelector('#modal-body');
+   modalMessage.textContent = message; // Sätt meddelandet i modalens body
+   const feedbackModal = new bootstrap.Modal(document.querySelector('#modal'));
+   feedbackModal.show(); // Visa modalen
+  } */
+  
+const feedbackModal = document.getElementById('feedbackModal');
+const modalBody = feedbackModal.querySelector('.modal-body');
+feedbackModal.addEventListener('show.bs.modal', (event) => {
+  // Identifiera knappen som öppnade modalen
+  const button = event.relatedTarget;
+
+  // Hämta data-message från knappen
+  const message = button.getAttribute('data-message');
+
+  // Uppdatera modalens innehåll
+  modalBody.innerHTML = `<p>${message}</p>`;
+});

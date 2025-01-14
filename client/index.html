@@ -8,17 +8,15 @@
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
-    <div class="modal" id="feedbackModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
+    <div class="modal" id="feedbackModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title">Bokförändring</h5>
-              <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="inputModal">
-              <p>Modal body text goes here.</p>
+
             </div>
           </div>
         </div>
@@ -55,19 +53,12 @@
                         </select>
                     </div>
                    
-                    <button type="submit" class="btn btn-primary" id="addBook">Skicka</button>
+                    <button type="submit" class="btn btn-primary" id="addBook" data-bs-toggle="modal" data-bs-target="#feedbackModal">Skicka</button>
                     
                 </fieldset>
-            </form>
-    
-            
+            </form>  
         </div>
         <div id="booksContainer"></div>
-
-
-
-
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="script.js"></script>
