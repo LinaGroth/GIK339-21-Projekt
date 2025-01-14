@@ -51,9 +51,25 @@ function changeBook(id) {
   
 }
 
+
 function deleteBook(id) {
   console.log("delete", id);
   fetch(`${url}/${id}`, { method: "DELETE" }).then(result => fetchData());
+  const feedbackModal = document.getElementById('feedbackModal');
+  const modalBody = feedbackModal.querySelector('.modal-body');
+  feedbackModal.addEventListener('show.bs.modal', (event) => {
+    // Identifiera knappen som öppnade modalen
+    const button = event.relatedTarget;
+
+    console.log("Button:", button); // Logga knappen
+    console.log("Data-message:", button ? button.getAttribute('data-message') : "Ingen knapp hittades");
+
+    // Hämta data-message om knappen finns, annars sätt ett standardmeddelande
+    const message = button ? button.getAttribute('data-message') : 'Inget meddelande att visa';
+
+    // Uppdatera modalens innehåll
+    modalBody.innerHTML = `<p>${message}</p>`;
+  });
 }
 /*   function deleteBook(id) {
     fetch(`${url}/${id}`, { method: 'DELETE' })
@@ -98,7 +114,7 @@ function handleSubmit(e) {
   });
   fetch(request).then((response) => {
     console.log(response);
-    const modalBody = document.getElementById('inputModal');
+    
     if (bookObject.id) {
       modalBody.innerHTML = `<p>Boken "${bookObject.title}" har uppdaterats.</p>`;
     } else {
@@ -108,6 +124,7 @@ function handleSubmit(e) {
     // Visa modalen
     const feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
     feedbackModal.show();
+    
     fetchData();
     localStorage.removeItem('currentId');
     bookForm.reset();
@@ -142,7 +159,7 @@ function handleSubmit(e) {
    feedbackModal.show(); // Visa modalen
   } */
   
-const feedbackModal = document.getElementById('feedbackModal');
+/* const feedbackModal = document.getElementById('feedbackModal');
 const modalBody = feedbackModal.querySelector('.modal-body');
 feedbackModal.addEventListener('show.bs.modal', (event) => {
   // Identifiera knappen som öppnade modalen
@@ -154,3 +171,8 @@ feedbackModal.addEventListener('show.bs.modal', (event) => {
   // Uppdatera modalens innehåll
   modalBody.innerHTML = `<p>${message}</p>`;
 });
+
+ */
+
+
+
