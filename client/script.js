@@ -116,10 +116,10 @@ function showFeedback(message) {
   const modalBody = document.getElementById('inputModal');
   modalBody.innerHTML = `<p>${message}</p>`;
   feedbackModal.show();
-  
+/*   
   document.querySelector('.modalBtn').addEventListener('click', () => {
     feedbackModal.hide();
-  });
+  }); */
 }
 
 const feedbackModal = document.getElementById('feedbackModal');
