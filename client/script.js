@@ -14,7 +14,7 @@ function fetchData() {
         books.forEach(book => {  
           const backgroundColor = book.color || "#f55555";
           html += `
-            <li class="mt-5 listItem " style="background-color: ${backgroundColor};"> 
+            <li class="mt-5 listItem" style="background-color: ${backgroundColor};"> 
               <p>Författare: ${book.author}</p>
               <p>Title: ${book.title}</p>
               <p>ISBN: ${book.isbn}</p>
@@ -116,13 +116,30 @@ function showFeedback(message) {
   const modalBody = document.getElementById('inputModal');
   modalBody.innerHTML = `<p>${message}</p>`;
   feedbackModal.show();
+  
+  document.querySelector('.modalBtn').addEventListener('click', () => {
+    feedbackModal.hide();
+  });
 }
-
 
 const feedbackModal = document.getElementById('feedbackModal');
 
-// Eventlistener för att stänga modalen och rensa modal-backdrop
-feedbackModal.addEventListener('hidden.bs.modal', () => {
+
+
+
+
+/* feedbackModal.addEventListener('hidden.bs.modal', () => {
+  feedbackModal.hide();
+}); */
+
+/* feedbackModal.addEventListener('hidden.bs.modal', () => {
   const backdrops = document.querySelectorAll('.modal-backdrop');
   backdrops.forEach(backdrop => backdrop.remove());
-});
+  document.body.classList.remove('modal-open');
+ 
+}); */
+// Eventlistener för att stänga modalen och rensa modal-backdrop
+
+console.log(document.body); // Kontrollera att du får rätt <body> element
+console.log(document.body.classList); // Kontrollera om classList är tillgängligt
+
