@@ -20,7 +20,7 @@ function fetchData() {
               <p>ISBN: ${book.isbn}</p>
               <p>Genre: ${book.genre}</p>
               <div id="buttons">
-                <button class="btnStyling" onclick="deleteBook(${book.id})" data-bs-toggle="modal" data-bs-target="#feedbackModal" data-message="Bok borttagen!">Ta bort</button>
+                <button class="btnStyling" onclick="deleteBook(${book.id})" data-message="Bok borttagen!">Ta bort</button>
                 <button class="btnStyling" onclick="changeBook(${book.id})">Ändra</button>
               </div>
             </li>`;
@@ -122,7 +122,7 @@ function showFeedback(message) {
   }); */
 }
 
-const feedbackModal = document.getElementById('feedbackModal');
+/* const feedbackModal = document.getElementById('feedbackModal'); */
 
 
 
@@ -140,6 +140,5 @@ const feedbackModal = document.getElementById('feedbackModal');
 }); */
 // Eventlistener för att stänga modalen och rensa modal-backdrop
 
-console.log(document.body); // Kontrollera att du får rätt <body> element
-console.log(document.body.classList); // Kontrollera om classList är tillgängligt
+
 
