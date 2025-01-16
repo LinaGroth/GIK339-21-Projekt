@@ -1,5 +1,5 @@
 body {
-    background-color: rgb(237, 229, 229);
+    background-color: rgb(236, 235, 235);
 }
 
 #booksContainer p {
@@ -58,7 +58,6 @@ body {
     border-color: #fff; 
 }
 
-/* För att säkerställa att knappar ser bra ut på mindre skärmar */
 #buttons {
     display: flex;
     gap: 10px; 
